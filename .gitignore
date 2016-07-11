@@ -1,0 +1,15 @@
+*.gz
+*.jslint
+*.swp
+*,v
+igp_*
+pub/System/GoogleMapsPlugin/gmap3.js
+pub/System/GoogleMapsPlugin/git
+pub/System/GoogleMapsPlugin/pkg.js
+/GoogleMapsPlugin_installer
+/GoogleMapsPlugin_installer.pl
+/GoogleMapsPlugin.md5
+/GoogleMapsPlugin.sha1
+/GoogleMapsPlugin.tgz
+/GoogleMapsPlugin.txt
+/GoogleMapsPlugin.zip

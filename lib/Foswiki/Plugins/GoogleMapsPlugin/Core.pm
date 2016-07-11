@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# GoogleMapsPlugin is Copyright (C) 2013 Michael Daum http://michaeldaumconsulting.com
+# GoogleMapsPlugin is Copyright (C) 2013-2016 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@ use Foswiki::Plugins::JQueryPlugin::Plugins ();
 use Foswiki::Plugins::JQueryPlugin::Plugin ();
 use Foswiki::Plugins ();
 use JSON ();
+use Error qw(:try);
 
 our @ISA = qw( Foswiki::Plugins::JQueryPlugin::Plugin );
 
@@ -31,13 +32,13 @@ sub new {
   my $this = bless(
     $class->SUPER::new(
       name => 'GoogleMaps',
-      version => '5.0b',
+      version => '6.1.0',
       author => 'Jean-Baptiste Demonte',
-      homepage => 'http://gmap3.net',
-      javascript => ['gmap3.js'],
+      homepage => 'http://v6.gmap3.net/',
+      javascript => ['pkg.js'],
       documentation => 'GoogleMapsPlugin',
       puburl => '%PUBURLPATH%/%SYSTEMWEB%/GoogleMapsPlugin',
-      dependencies => ['GOOGLEMAPSAPI'],
+      dependencies => ['JQUERYPLUGIN::GOOGLEMAPSAPI'],
     ),
     $class
   );
@@ -52,9 +53,17 @@ sub init {
 
   my $session = $Foswiki::Plugins::SESSION;
   my $language = $session->i18n->language();
+  my $apiKey = $Foswiki::cfg{GoogleMapsPlugin}{APIKey};
+  $apiKey = $apiKey?"&key=$apiKey":"";
 
-  Foswiki::Func::addToZone('script', "GOOGLEMAPSAPI", <<"HERE");
-<script src="//maps.googleapis.com/maps/api/js?sensor=false&language=$language" type="text/javascript"></script>
+  Foswiki::Func::addToZone('script', "JQUERYPLUGIN::GOOGLEMAPSAPI", <<"HERE", "JQUERYPLUGIN");
+<script type="text/javascript">
+function initGoogleApi() {
+  jQuery(window).trigger('googleApiLoaded');
+  window.googleApiLoaded = true;
+}
+</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?language=$language&$apiKey&callback=initGoogleApi" ></script>
 HERE
 
 }
@@ -63,21 +72,20 @@ sub GOOGLEMAPS {
   my ($this, $params, $theTopic, $theWeb) = @_;
 
   my %opts = ();
-
   my $address = $params->{address};
   $opts{map}{address} = $address if defined $address;
 
   my $center = $params->{center};
   $opts{map}{options}{center} = [split(/\s*,\s*/, $center)] if defined $center;
 
-  my $zoom = $params->{zoom};
-  $opts{map}{options}{zoom} = int($zoom) if defined $zoom;
+  my $zoom = $params->{zoom} || 1;
+  $opts{map}{options}{zoom} = int($zoom);
 
   my $markerAddress = $params->{markeraddress};
   if (defined $markerAddress) {
     foreach my $address (split(/\s*[\n;]\s*/, $markerAddress)) {
       my @address = split(/\s*,\s*/, $address);
-      push @{$opts{marker}{values}}, {address => $address, data => join("<br />", @address)}
+      push @{$opts{marker}{values}}, {address => $address}
     }
   }
 
@@ -93,17 +101,10 @@ sub GOOGLEMAPS {
   my $mapType = $params->{type};
   $opts{map}{options}{mapTypeId} = $mapType if defined $mapType;
 
-  my $mapTypeControl = Foswiki::Func::isTrue($params->{typecontrol}, 1);
-  $opts{map}{options}{mapTypeControl} = $mapTypeControl;
-
-  my $navigationControl = Foswiki::Func::isTrue($params->{navigationcontrol}, 1);
-  $opts{map}{options}{navigationControl} = $navigationControl;
-
-  my $streetViewControl = Foswiki::Func::isTrue($params->{streetviewcontrol}, 1);
-  $opts{map}{options}{streetViewControl} = $streetViewControl;
-
-  my $scrollWheel = Foswiki::Func::isTrue($params->{scrollwheel}, 1);
-  $opts{map}{options}{scrollwheel} = $scrollWheel;
+  $opts{map}{options}{mapTypeControl} = _isTrue($params->{typecontrol}, 1);
+  $opts{map}{options}{navigationControl} = _isTrue($params->{navigationcontrol}, 1);
+  $opts{map}{options}{streetViewControl} = _isTrue($params->{streetviewcontrol}, 1);
+  $opts{map}{options}{scrollwheel} = _isTrue($params->{scrollwheel}, 1);
 
   my $height = $params->{height};
   $height = '350px' unless defined $height;
@@ -116,44 +117,42 @@ sub GOOGLEMAPS {
   my $id = $params->{id};
   $id = 'gmap3' . Foswiki::Plugins::JQueryPlugin::Plugins::getRandom() unless defined $id;
  
-  my $opts = JSON::to_json(\%opts, {pretty=>1});
-  $opts =~ s/\n$//;
+  return "<div class='gmap3' ".$this->_toHtml5Data(\%opts)." id='$id' style='".join(";", @styles)."'></div>";
+}
 
-  my $script = "<script>jQuery(function(\$) {\n";
-  $script .= "var opts = $opts;\n";
+sub _toHtml5Data {
+  my ($this, $opts) = @_;
 
-  if (defined $markerAddress) {
-    $script .= <<'JAVASCRIPT';
-opts.marker = $.extend(opts.marker, {
-  "events": {
-    "click": function(marker, event, context) {
-      var map = marker.map; //$(this).gmap3("get"),
-        infowindow = $(this).gmap3({get:{name:"infowindow"}});
-
-      if (infowindow){
-        infowindow.open(map, marker);
-        infowindow.setContent(context.data);
-      } else {
-        $(this).gmap3({
-          infowindow:{
-            anchor:marker, 
-            options:{content: context.data}
-          }
-        });
-      }
+  my @data = ();
+  foreach my $key (keys %$opts) {
+    my $val = $opts->{$key};
+    if (ref($val)) {
+      $val = $this->_json->encode($val);
+    } else {
+      $val = Foswiki::entityEncode($val);
     }
+    push @data, "data-$key='$val'";
   }
-});
-JAVASCRIPT
-  };
 
-  #$script .= 'console.log("opts=",opts);'."\n";
-  $script .= '$("#'.$id.'").gmap3(opts);';
-  $script .= "\n});\n</script>";
+  return join(" ", @data);
+}
 
-  Foswiki::Func::addToZone("script", $id, $script, "JQUERYPLUGIN, GOOGLEMAPSAPI");
+sub _isTrue {
+  my ($val, $default) = @_;
+  return Foswiki::Func::isTrue($val, $default)?JSON::true:JSON::false;
+}
 
-  return "<div class='gmap3' id='$id' style='".join(";", @styles)."'></div>";
+sub _json {
+  my $this = shift;
+
+  unless (defined $this->{_json}) {
+    $this->{_json} = JSON->new; 
+  }
+
+  return $this->{_json};
+}
+sub _inlineError {
+  return "<div class='foswikiAlert'>$_[0]</div>";
 }
 
 1;
