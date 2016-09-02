@@ -220,6 +220,7 @@ If you are using [[Foswiki:Extensions/SecurityHeadersPlugin][SecurityHeadersPlug
 %$DEPENDENCIES%
 
 ---++ Change History
+|  02 Sep 2016: | repackaged to contain a missing js file in the examples |
 |  21 Apr 2016: | upgraded to latest version of gmap3 |
 |  07 Nov 2013: | fixed issue mixing HTTP and HTTPS assets |
 |  06 May 2013: | implement multiple markers, all having a click event to open an infowindow |

@@ -10,3 +10,4 @@ pub/System/GoogleMapsPlugin/Makefile 0644
 pub/System/GoogleMapsPlugin/pkg.js 0644
 pub/System/GoogleMapsPlugin/pkg.js.gz 0644
 pub/System/GoogleMapsPlugin/pkg.uncompressed.js 0644
+pub/System/GoogleMapsPlugin/script.js 0644

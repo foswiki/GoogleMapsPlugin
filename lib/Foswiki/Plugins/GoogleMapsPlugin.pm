@@ -22,8 +22,8 @@ use Foswiki::Func ();
 use Foswiki::Plugins::JQueryPlugin ();
 #use Foswiki::Plugins::GoogleMapsPlugin::Core(); # NOTE: comment out for production
 
-our $VERSION = '3.00';
-our $RELEASE = '11 Jul 2016';
+our $VERSION = '3.01';
+our $RELEASE = '02 Sep 2016';
 our $SHORTDESCRIPTION = 'Google Maps for Foswiki';
 our $NO_PREFS_IN_TOPIC = 1;
 
