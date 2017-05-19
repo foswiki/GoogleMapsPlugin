@@ -2564,8 +2564,6 @@ jQuery(function($) {
 
     if (typeof(opts.marker) !== 'undefined') {
 
-      $.each(opts.marker.values, function(index, item) {
-
         opts.marker.events =  {
           "click": function(marker,event,context) {
             var $this = $(this),
@@ -2610,7 +2608,6 @@ jQuery(function($) {
             }
           }
         };
-      });
     }
 
 
