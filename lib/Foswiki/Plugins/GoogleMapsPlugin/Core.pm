@@ -81,11 +81,14 @@ sub GOOGLEMAPS {
   my $zoom = $params->{zoom} || 1;
   $opts{map}{options}{zoom} = int($zoom);
 
-  my $markerAddress = $params->{markeraddress};
-  if (defined $markerAddress) {
-    foreach my $address (split(/\s*[\n;]\s*/, $markerAddress)) {
-      my @address = split(/\s*,\s*/, $address);
-      push @{$opts{marker}{values}}, {address => $address}
+  my $markerValuesParam = $params->{markeraddress};
+  if (defined $markerValuesParam) {
+    foreach my $marker (split(/\s*[\n;]\s*/, $markerValuesParam)) {
+      my ($address, $data) = split(/\s*=\s*/, $marker);
+      unless ( $data ) {
+        $data = $address unless ( $marker =~ m/=/ );
+      }  
+      push(@{$opts{marker}{values}}, {address => $address, data => $data});
     }
   }
 

@@ -2563,15 +2563,15 @@ jQuery(function($) {
         opts = $this.data();
 
     if (typeof(opts.marker) !== 'undefined') {
-      $.each(opts.marker.values, function(index, item) {
+
         opts.marker.events =  {
-          "click": function(marker) {
+          "click": function(marker,event,context) {
             var $this = $(this),
                 infowindow = $this.gmap3({get:{name:"infowindow"}}),
                 content;
-            
-            if (item.address) {
-              content = item.address.replace(/, */g, '<br />');
+
+            if (context.data) {
+              content = context.data.replace(/, */g, '<br />');
       
               if (infowindow) {
                 infowindow.open($this.gmap3("get"), marker);
@@ -2608,7 +2608,6 @@ jQuery(function($) {
             }
           }
         };
-      });
     }
 
 
