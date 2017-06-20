@@ -4,10 +4,13 @@ PKG_SOURCE=gmap3.uncompressed.js gmap3.init.uncompressed.js
 
 -include $(FOSWIKI_ROOT)/pub/System/JQueryPlugin/Makefile.include
 
-.PHONY: git
+.PHONY: git clean
 
 git:
 	git clone https://github.com/jbdemonte/gmap3.git git
+
+clean:
+	rm $(TARGET) pkg.uncompressed.js *.gz *.jslint
 
 pkg.uncompressed.js: $(PKG_SOURCE)
 	cat $(PKG_SOURCE) > $@
