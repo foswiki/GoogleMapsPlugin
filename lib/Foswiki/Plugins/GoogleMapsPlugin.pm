@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# GoogleMapsPlugin is Copyright (C) 2013-2016 Michael Daum http://michaeldaumconsulting.com
+# GoogleMapsPlugin is Copyright (C) 2013-2017 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,8 +22,8 @@ use Foswiki::Func ();
 use Foswiki::Plugins::JQueryPlugin ();
 #use Foswiki::Plugins::GoogleMapsPlugin::Core(); # NOTE: comment out for production
 
-our $VERSION = '3.01';
-our $RELEASE = '02 Sep 2016';
+our $VERSION = '3.10';
+our $RELEASE = '20 Jun 2017';
 our $SHORTDESCRIPTION = 'Google Maps for Foswiki';
 our $NO_PREFS_IN_TOPIC = 1;
 
