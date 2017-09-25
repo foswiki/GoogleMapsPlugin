@@ -1,6 +1,6 @@
-# Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
+# Plugin for Foswiki - The Free and Open Source Wiki, https://foswiki.org/
 #
-# GoogleMapsPlugin is Copyright (C) 2013-2017 Michael Daum http://michaeldaumconsulting.com
+# GoogleMapsPlugin is Copyright (C) 2013-2017 Michael Daum https://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -63,7 +63,7 @@ function initGoogleApi() {
   window.googleApiLoaded = true;
 }
 </script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?language=$language&$apiKey&callback=initGoogleApi" ></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?language=$language$apiKey&callback=initGoogleApi" ></script>
 HERE
 
 }
@@ -154,6 +154,7 @@ sub _json {
 
   return $this->{_json};
 }
+
 sub _inlineError {
   return "<div class='foswikiAlert'>$_[0]</div>";
 }

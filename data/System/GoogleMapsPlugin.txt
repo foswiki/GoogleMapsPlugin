@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" comment="" date="1495161447" format="1.1" reprev="4" version="6"}%
+%META:TOPICINFO{author="micha" comment="" date="1501262303" format="1.1" reprev="4" version="13"}%
 ---+!! %TOPIC%
 %FORMFIELD{"Description"}%
 
@@ -197,7 +197,7 @@ while opening up a few more possibilities.
 | =markeraddress="..."= | addresses of markers to be displayed on the map; addresses are separated by newlines <br />\
 See [[#DetailsForMarkerAddress][examples]] below. | |
 | =infowindow="..."= | content of the info window to be displayed at the marker, or at the =infowindowaddress= | |
-| _use either =address= or =center=._   ||
+| _use either =address= or =center=._   |||
 | =address="..."= | free form address to center the map on | |
 | =center="..."= | comma-separated latitude and longitude position to center the map on, e.g. =53, 9= | |
 | _use either =infowindowaddress= or =infowindowposition=._   |||
@@ -220,7 +220,6 @@ See [[#DetailsForMarkerAddress][examples]] below. | |
 | A location followed by an equal sign (=) | Oak Ridge= | <img src="%ATTACHURLPATH%/TheOakRidgeSite.jpg" alt="TheOakRidgeSite.jpg" width='351' height='128' /> |
 | A location and a description, separated by an equal sign | White Sands Missile Range=White Sands Missile Range,The location of the Trinity test. <p />\
 <b>Note:</b> the comma introduces a new line. | <img src="%ATTACHURLPATH%/TheTrinityTestSite.jpg" alt="TheTrinityTestSite.jpg" width='233' height='133' /> |
-
 
 ---++ Further reading
 
@@ -246,13 +245,13 @@ If you are using [[Foswiki:Extensions/SecurityHeadersPlugin][SecurityHeadersPlug
 
 ---++ Change History
 
+%TABLE{columnwidths="7em" tablewidth="100%"}%
+|  25 Sep 2017: | fixed sending the API key to google |
 |  02 Sep 2016: | repackaged to contain a missing js file in the examples |
 |  21 Apr 2016: | upgraded to latest version of gmap3 |
 |  07 Nov 2013: | fixed issue mixing HTTP and HTTPS assets |
 |  06 May 2013: | implement multiple markers, all having a click event to open an infowindow |
 |  08 Feb 2013: | initial release |
-
-
 
 
 %META:FORM{name="PackageForm"}%
