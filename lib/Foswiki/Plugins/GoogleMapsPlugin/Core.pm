@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, https://foswiki.org/
 #
-# GoogleMapsPlugin is Copyright (C) 2013-2017 Michael Daum https://michaeldaumconsulting.com
+# GoogleMapsPlugin is Copyright (C) 2013-2019 Michael Daum https://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -46,6 +46,12 @@ sub new {
   return $this;
 }
 
+sub DESTROY {
+  my $this = shift;
+
+  undef $this->{_json};
+}
+
 sub init {
   my $this = shift;
 
@@ -57,13 +63,13 @@ sub init {
   $apiKey = $apiKey?"&key=$apiKey":"";
 
   Foswiki::Func::addToZone('script', "JQUERYPLUGIN::GOOGLEMAPSAPI", <<"HERE", "JQUERYPLUGIN");
-<script type="text/javascript">
+<script>
 function initGoogleApi() {
   jQuery(window).trigger('googleApiLoaded');
   window.googleApiLoaded = true;
 }
 </script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?language=$language$apiKey&callback=initGoogleApi" ></script>
+<script src="https://maps.googleapis.com/maps/api/js?language=$language$apiKey&callback=initGoogleApi" ></script>
 HERE
 
 }
